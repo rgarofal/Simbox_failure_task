@@ -9,9 +9,9 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>it.fastweb</groupId>
-    <artifactId>simbox-approved</artifactId>
+    <artifactId>simbox-failure</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>simbox-approved</name>
+    <name>simbox-failure</name>
 
     <properties>
         <java.version>1.8</java.version>
