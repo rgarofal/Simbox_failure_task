@@ -23,6 +23,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jmx.export.MBeanExporter;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.cloud.task.configuration.EnableTask;
 
 import javax.sql.DataSource;
 import java.util.Date;
@@ -30,6 +31,7 @@ import java.util.List;
 
 @Configuration
 @EnableBatchProcessing
+@EnableTask
 @Import({DatabaseConfiguration.class, MBeanExporter.class})
 public class JobConfiguration {
 
@@ -76,7 +78,8 @@ public class JobConfiguration {
         return launcher;
     }
 
-    @Scheduled(cron = "* */15 * * * *")
+    //@Scheduled(cron = "* */15 * * * *")
+    @Bean
     public void runJobScheduled() throws Exception {
 
         log.info("Job Started at :" + new Date());

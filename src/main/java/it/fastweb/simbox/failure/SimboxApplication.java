@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication(exclude = DataSourceAutoConfiguration.class)
-@EnableScheduling
+//@EnableScheduling
 public class SimboxApplication {
 
     public static void main(String[] args) throws Exception {
