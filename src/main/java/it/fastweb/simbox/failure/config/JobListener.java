@@ -11,31 +11,44 @@ import org.springframework.batch.core.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class JobListener implements JobExecutionListener, StepExecutionListener{
 
     private final SessionClient sessionClient;
+    //rg
+    private URL resource;
     private Session session;
     private ChannelSftp channelSftp;
     private static final Logger log = LoggerFactory.getLogger(JobListener.class);
 
     @Autowired
-    public JobListener(SessionClient sessionClient) {
+    public JobListener(SessionClient sessionClient) throws URISyntaxException {
         this.sessionClient = sessionClient;
     }
 
     public Session openSession() {
 
         try {
-            final URL resource = getClass().getClassLoader().getResource("rco-sftp.ppk");
-
+        	            
             String user = sessionClient.getUser();
             int port = sessionClient.getPort();
             String host = sessionClient.getHost();
             JSch jsch = new JSch();
-
-            jsch.addIdentity(resource.toURI().getPath());
+            
+            String path_identity = writeResourceToFile("rco-sftp.ppk");
+            jsch.addIdentity(path_identity);
             session = jsch.getSession(user, host, port);
             java.util.Properties config = new java.util.Properties();
             config.put("StrictHostKeyChecking", "no");
@@ -66,6 +79,24 @@ public class JobListener implements JobExecutionListener, StepExecutionListener{
 
         log.info("Channel aperto: " + channelSftp.isConnected());
         return channelSftp;
+    }
+    
+    
+    private String writeResourceToFile(String resourceName) throws URISyntaxException, IOException
+    {
+    	ClassLoader CLDR = getClass().getClassLoader();
+        log.debug("Class loader = " + CLDR.toString());
+        log.debug("Get class Name = " + getClass().getName());
+    	log.debug("Resource name = " + resourceName );
+        resource = CLDR.getResource(resourceName);
+        log.debug("Resource URI  = " + resource.toURI());
+        log.debug("Reading path without using URI = " + resource.getPath());
+        log.debug("Reading path using URI = " + resource.toURI().getPath() );
+        
+        InputStream configStream = CLDR.getResourceAsStream(resourceName);
+        Path pth =  Paths.get(resourceName);
+        Files.copy(configStream, Files.createFile(pth), StandardCopyOption.REPLACE_EXISTING);
+        return pth.toAbsolutePath().toString();
     }
 
     @Override

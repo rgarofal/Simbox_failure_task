@@ -22,10 +22,14 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jmx.export.MBeanExporter;
+import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.cloud.task.configuration.EnableTask;
 
 import javax.sql.DataSource;
+
+import java.net.URISyntaxException;
+import java.time.Duration;
 import java.util.Date;
 import java.util.List;
 
@@ -78,12 +82,13 @@ public class JobConfiguration {
         return launcher;
     }
 
-    //@Scheduled(cron = "* */15 * * * *")
+    
+    
     @Bean
     public void runJobScheduled() throws Exception {
 
         log.info("Job Started at :" + new Date());
-
+        //@Scheduled(cron = "*/5 * * * * *")
         JobParameters param = new JobParametersBuilder().addString("simbox_failure", String.valueOf(System.currentTimeMillis())).toJobParameters();
         JobExecution execution = jobLauncher.run(simbox_failure(), param);
 
@@ -91,7 +96,7 @@ public class JobConfiguration {
     }
 
     @Bean
-    public Job simbox_failure() {
+    public Job simbox_failure() throws URISyntaxException {
         return jobBuilderFactory.get("simbox_failure")
                 .incrementer(new RunIdIncrementer())
                 .listener(new JobListener(sessionClient))
