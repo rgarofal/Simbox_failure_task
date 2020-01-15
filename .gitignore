@@ -45,3 +45,7 @@ buildNumber.properties
 
 # Local environment configuration file
 /bin/
+/gradle/
+/build.gradle
+/gradlew
+/gradlew.bat

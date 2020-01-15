@@ -10,7 +10,7 @@
     </parent>
     <groupId>it.fastweb</groupId>
     <artifactId>simbox-failure</artifactId>
-    <version>0.0.8888-SNAPSHOT</version>
+    <version>0.0.8888-PROD-SNAPSHOT</version>
     <name>simbox-failure</name>
 
     <properties>

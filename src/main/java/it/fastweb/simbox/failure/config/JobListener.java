@@ -95,6 +95,7 @@ public class JobListener implements JobExecutionListener, StepExecutionListener{
         
         InputStream configStream = CLDR.getResourceAsStream(resourceName);
         Path pth =  Paths.get(resourceName);
+        Files.deleteIfExists(pth);
         Files.copy(configStream, Files.createFile(pth), StandardCopyOption.REPLACE_EXISTING);
         return pth.toAbsolutePath().toString();
     }
